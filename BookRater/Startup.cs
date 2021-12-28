@@ -25,15 +25,16 @@ namespace BookRater
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
+            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration).GetAwaiter().GetResult());
         }
 
-        private static async Task<CosmosDbService> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
+        private static async Task<CosmosDbService> InitializeCosmosClientInstanceAsync(IConfiguration configuration)
         {
-            string databaseName = configurationSection.GetSection("DatabaseName").Value;
-            string containerName = configurationSection.GetSection("ContainerName").Value;
-            string account = Environment.GetEnvironmentVariable("DB_URI");
-            string key = Environment.GetEnvironmentVariable("DB_KEY");
+            var cosmosDbSection = configuration.GetSection("CosmosDb");
+            string databaseName = cosmosDbSection.GetSection("DatabaseName").Value;
+            string containerName = cosmosDbSection.GetSection("ContainerName").Value;
+            string account = configuration.GetSection("DB_URI").Value;
+            string key = configuration.GetSection("DB_KEY").Value;
             Microsoft.Azure.Cosmos.CosmosClient client = new Microsoft.Azure.Cosmos.CosmosClient(account, key);
             CosmosDbService cosmosDbService = new CosmosDbService(client, databaseName, containerName);
             Microsoft.Azure.Cosmos.DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
