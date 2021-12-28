@@ -32,8 +32,8 @@ namespace BookRater
         {
             string databaseName = configurationSection.GetSection("DatabaseName").Value;
             string containerName = configurationSection.GetSection("ContainerName").Value;
-            string account = configurationSection.GetSection("DB_URI").Value;
-            string key = configurationSection.GetSection("DB_KEY").Value;
+            string account = Environment.GetEnvironmentVariable("DB_URI");
+            string key = Environment.GetEnvironmentVariable("DB_KEY");
             Microsoft.Azure.Cosmos.CosmosClient client = new Microsoft.Azure.Cosmos.CosmosClient(account, key);
             CosmosDbService cosmosDbService = new CosmosDbService(client, databaseName, containerName);
             Microsoft.Azure.Cosmos.DatabaseResponse database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
