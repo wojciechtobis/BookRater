@@ -25,6 +25,7 @@ namespace BookRater
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddApplicationInsightsTelemetry();
             services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration).GetAwaiter().GetResult());
         }
 

@@ -28,6 +28,11 @@ namespace BookRater.Controllers
             return View();
         }
 
+        public IActionResult Throw500()
+        {
+            throw new Exception();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
